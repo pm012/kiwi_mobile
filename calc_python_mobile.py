@@ -19,7 +19,8 @@ class Calculator(BoxLayout):
             halign="right",
             multiline=False,
             background_color=[0.2, 0.2, 0.2, 1],
-            foreground_color =[1,1,1,1]
+            foreground_color =[1,1,1,1],
+            text = "0"
         )
         self.add_widget(self.result)
 
@@ -48,7 +49,7 @@ class Calculator(BoxLayout):
         self.add_widget(grid)
     
     def set_button_color(self, label):
-        if label in {'C', '+/-', '%', '/'}:
+        if label in {'C', '+/-', '%'}:
             return [0.6,0.6,0.6,1]
         elif label in {"/", "*", "-", "+", "="}:
             return [0.988, 0.631, 0.012, 1]
@@ -58,10 +59,10 @@ class Calculator(BoxLayout):
 
 
     def button_click(self, instance):
-        text = instance.text
+        text = instance.text        
 
         if text == "C":
-            self.result.text =""
+            self.result.text ="0"
         elif text == "=":
             self.calculate()
         elif text == "+/-":
@@ -69,16 +70,21 @@ class Calculator(BoxLayout):
         elif text == "%":
             self.convert_percent()
         else:
-            self.result.text += text
+            if self.result.text == "0" and text not in {"+", "-", "*", "/", ".", "+/-"}:
+                self.result.text = text  # Replace "0" with new number
+            else:
+                self.result.text += text  # Append normally
     
-    def calculate(self):
-        try:
+    
+     
+    def calculate(self):  
+        try:            
             self.result.text = str(eval(self.result.text))
-        except Exception:
+        except (SyntaxError, ValueError):
             self.result.text = "ERROR"
 
     def toggle_neg(self):
-        if self.result.text:
+        if self.result.text and self.result.text!="0":
             self.result.text = self.result.text[1:] if self.result.text[0] == "-" else "-" + self.result.text
 
     def convert_percent(self):
