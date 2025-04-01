@@ -10,6 +10,7 @@ Window.size = (300, 500)
 class Calculator(BoxLayout):
     def __init__(self, **kwargs):
         super().__init__(orientation='vertical', **kwargs)
+        self.last_expression = ""  # Stores the last valid expression
 
         #Build out the app
         self.result = TextInput(
@@ -63,6 +64,7 @@ class Calculator(BoxLayout):
 
         if text == "C":
             self.result.text ="0"
+            self.last_expression = ""
         elif text == "=":
             self.calculate()
         elif text == "+/-":
@@ -78,9 +80,18 @@ class Calculator(BoxLayout):
     
      
     def calculate(self):  
-        try:            
-            self.result.text = str(eval(self.result.text))
-        except (SyntaxError, ValueError):
+        try:
+            expression = self.result.text
+
+            # If user presses "=" multiple times, repeat last operation
+            if expression == "" and self.last_expression:
+                expression = self.last_expression
+
+            result = eval(expression)
+            self.last_expression = f"{expression}+{result}"  # Store for repeated "="
+            self.result.text = str(result)
+
+        except Exception:
             self.result.text = "ERROR"
 
     def toggle_neg(self):
@@ -88,10 +99,24 @@ class Calculator(BoxLayout):
             self.result.text = self.result.text[1:] if self.result.text[0] == "-" else "-" + self.result.text
 
     def convert_percent(self):
-        try:
-            self.result.text = str(float(self.result.text)/100)
-        except ValueError:
-            self.result.text = "ERROR"
+        text = self.result.text.strip()
+        
+        # Case 1: "X % Y" → (X / 100) * Y
+        if "%" in text and text.count("%") == 1:
+            parts = text.split("%")
+            if len(parts) == 2 and parts[0].strip().isdigit() and parts[1].strip().isdigit():
+                x, y = float(parts[0]), float(parts[1])
+                self.result.text = str((x / 100) * y)
+                return
+        
+        # Case 2: "X%" → X / 100
+        elif text.endswith("%") and text[:-1].strip().isdigit():
+            x = float(text[:-1])
+            self.result.text = str(x / 100)
+            return
+
+        # Invalid % usage
+        self.result.text = "ERROR"
 
             
 
