@@ -19,8 +19,9 @@ class StateAnswer(State):
             calc.x = 0
             self.typing = True
         # Transition to X state and forward digit
-        calc.get_state(self.factory.get_x())
-        calc.get_state().digit(calc,key)
+        next_state=self.factory.get_x()
+        calc.set_state(next_state)
+        next_state.digit(calc, key)
                 
 
     def arifm(self, calc, key):

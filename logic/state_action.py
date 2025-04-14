@@ -4,10 +4,14 @@ from .state import State
 class StateAction(State):
     def __init__(self, factory):
         self.factory = factory
+        self.typing = False
+    
+    
     def clear(self, calc):
        calc.x = 0
        calc.y = 0
-       calc.op = '+'       
+       calc.op = '+'
+       self.typing = False       
         
 
     def digit(self, calc, key):
