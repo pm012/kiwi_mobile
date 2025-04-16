@@ -6,12 +6,13 @@ from kivy.uix.button import Button
 from kivy.core.window import Window
 
 from logic.calculator import Calculator
+from logic.state_factory import StateFactory
 
 Window.size = (300, 400)
 
 class KivyCalculator(BoxLayout):
     def __init__(self, **kwargs):
-        super().__init__(orientation='vertical', **kwargs)
+        super().__init__(orientation='vertical', **kwargs)       
         self.calc = Calculator()
 
         self.display = TextInput(

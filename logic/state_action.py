@@ -16,6 +16,7 @@ class StateAction(State):
 
     def digit(self, calc, key):
         next_state = self.factory.get_y()
+        next_state.typing = False
         calc.set_state(next_state)
         next_state.digit(calc, key)
 

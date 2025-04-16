@@ -4,10 +4,13 @@ class Calculator:
     def __init__(self):
         self.x = 0
         self.y = 0
+        self.last_y = 0
         self.op = '+'
         self.factory = StateFactory()
         self.state = self.factory.get_x()
         self.state.clear(self)
+        self.last_op = None
+        self.last_y = None
 
     def press(self, key):
         if key in 'cC':
@@ -22,8 +25,8 @@ class Calculator:
     def set_state(self, state): self.state = state
     def get_state(self): return self.state
     def get_factory(self): return self.factory
-
     def show(self): return self.state.show(self)
 
     def __str__(self):
-        return f"x={self.x} y={self.y} op={self.op} state={type(self.state).__name__}"
+        return f"x={self.x}, y={self.y}, last_y={self.last_y}, op={self.op}, state={type(self.state).__name__}"
+
